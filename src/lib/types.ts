@@ -113,3 +113,20 @@ export interface ActivityItem {
   text: string;
   emphasis?: boolean;
 }
+
+// ---- Auth & history (mock; persisted to localStorage) ----
+export interface AuthState {
+  signedIn: boolean;
+  method?: 'google' | 'phone';
+  phone?: string;
+}
+
+export interface HistoryEntry {
+  id: string;
+  roomName: string;
+  roomCode: string;
+  gameId: GameId;
+  date: string; // ISO
+  outcome: string; // e.g. "Won Top Line · Full House" / "2nd · 34 pts"
+  won: boolean;
+}

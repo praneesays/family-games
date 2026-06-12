@@ -5,6 +5,8 @@ import { Landing } from './screens/Landing';
 import { CreateRoom } from './screens/CreateRoom';
 import { Room } from './screens/Room';
 import { Profile } from './screens/Profile';
+import { Login } from './screens/Login';
+import { Dashboard } from './screens/Dashboard';
 import { ToastHost, MomentLayer, FloatLayer } from './components/Overlays';
 
 export default function App() {
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/create" element={<CreateRoom />} />
           <Route path="/r/:code" element={<Room />} />
           <Route path="/me" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

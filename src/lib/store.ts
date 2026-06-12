@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import type {
   ActivityItem,
+  AuthState,
   Card,
   FloatReaction,
   GameId,
   GameState,
+  HistoryEntry,
   MomentData,
   Player,
   Room,
@@ -86,10 +88,14 @@ interface State {
   terminal: null | 'full' | 'ended' | 'invalid' | 'kicked' | 'goodbye';
   sessionWins: SessionWin[];
   gamesPlayed: number;
+  auth: AuthState;
+  history: HistoryEntry[];
 
   // identity
   setName: (name: string) => void;
   loadSelf: () => void;
+  signIn: (method: 'google' | 'phone', phone?: string) => void;
+  signOut: () => void;
 
   // room lifecycle
   createRoom: (name: string, gameId: GameId, options: TambolaOptions | { pointsLimit: number }) => string;
@@ -144,6 +150,27 @@ export const useStore = create<State>((set, get) => {
       if (get().moment?.id === moment.id) set({ moment: null });
     }, autoMs);
   }
+  function recordHistory(outcome: string, won: boolean) {
+    const room = get().room;
+    if (!room) return;
+    const entry: HistoryEntry = {
+      id: id(),
+      roomName: room.name,
+      roomCode: room.code,
+      gameId: room.gameId,
+      date: new Date().toISOString(),
+      outcome,
+      won,
+    };
+    const history = [entry, ...get().history].slice(0, 30);
+    set({ history });
+    try {
+      localStorage.setItem('fg_history', JSON.stringify(history));
+    } catch {
+      /* storage full/unavailable — history is best-effort */
+    }
+  }
+
   function recordWin(name: string) {
     set((s) => {
       const existing = s.sessionWins.find((w) => w.name === name);
@@ -287,6 +314,9 @@ export const useStore = create<State>((set, get) => {
     const g = get().game as TambolaState;
     set({ game: { ...g, finished: true } });
     clearSim();
+    const myName = get().players.find((p) => p.isSelf)?.name;
+    const myPrizes = g.prizes.filter((p) => p.wonBy === myName).map((p) => p.label);
+    recordHistory(myPrizes.length ? `Won ${myPrizes.join(' · ')}` : 'No prizes this time', myPrizes.length > 0);
     later(() => set({ room: { ...get().room!, status: 'results' }, gamesPlayed: get().gamesPlayed + 1 }), 1800);
   }
 
@@ -432,6 +462,12 @@ export const useStore = create<State>((set, get) => {
     });
     set({ game: { ...g, finished: true, declarer: pid, scores } });
     recordWin(name);
+    {
+      const ranking = Object.entries(scores).sort((a, b) => a[1] - b[1]);
+      const myRank = ranking.findIndex(([p]) => p === selfId()) + 1;
+      const ord = ['', '1st', '2nd', '3rd', '4th', '5th', '6th'][myRank] ?? `${myRank}th`;
+      recordHistory(`${ord} · ${scores[selfId()] ?? 0} pts`, myRank === 1);
+    }
     activity(`🃏 ${name} declared and won!`, true);
     showMoment({ title: `${name} declares!`, subtitle: 'Hands revealed 🎉', avatarName: name, colorIndex: get().players.find((p) => p.id === pid)?.colorIndex ?? 0 });
     clearSim();
@@ -459,11 +495,32 @@ export const useStore = create<State>((set, get) => {
     terminal: null,
     sessionWins: [],
     gamesPlayed: 0,
+    auth: { signedIn: false },
+    history: [],
 
     loadSelf: () => {
       const name = localStorage.getItem('fg_name') ?? '';
       const color = Number(localStorage.getItem('fg_color') ?? '0');
-      set({ selfName: name, selfColor: color });
+      let auth: AuthState = { signedIn: false };
+      let history: HistoryEntry[] = [];
+      try {
+        auth = JSON.parse(localStorage.getItem('fg_auth') ?? 'null') ?? { signedIn: false };
+        history = JSON.parse(localStorage.getItem('fg_history') ?? '[]');
+      } catch {
+        /* corrupt storage — fall back to defaults */
+      }
+      set({ selfName: name, selfColor: color, auth, history });
+    },
+    signIn: (method, phone) => {
+      const auth: AuthState = { signedIn: true, method, phone };
+      localStorage.setItem('fg_auth', JSON.stringify(auth));
+      set({ auth });
+      toast(method === 'google' ? 'Signed in with Google ✓' : 'Phone verified ✓', 'success');
+    },
+    signOut: () => {
+      localStorage.removeItem('fg_auth');
+      set({ auth: { signedIn: false } });
+      toast('Signed out', 'info');
     },
     setName: (name) => {
       const color = get().selfColor || Math.floor(Math.random() * 8);
@@ -648,6 +705,7 @@ export const useStore = create<State>((set, get) => {
       set({ game: { ...g, finished: true, declarer: selfId(), scores } });
       const me = get().players.find((p) => p.isSelf)?.name ?? 'You';
       recordWin(me);
+      recordHistory('Declared & won 🃏', true);
       showMoment({ title: 'You declared! 🎉', subtitle: 'Hands revealed', avatarName: me, colorIndex: get().selfColor });
       clearSim();
       later(() => set({ room: { ...get().room!, status: 'results' }, gamesPlayed: get().gamesPlayed + 1 }), 1900);

@@ -39,6 +39,19 @@ mobile-first; tablet and desktop add chrome around the same game slot.
 | **Rummy** | Create a Rummy room → on your turn, tap **Draw**/**Take**, select a card, **Discard** (or **Declare**) → bots play their turns on timers → results |
 | **Join via shared link (Suresh)** | Visit any `/r/CODE` (e.g. `/r/LOTUS42`) — a room "already hosted by Priya" appears → enter a name → join → host auto-starts |
 | **Results loop** | After any game: host gets *Play Again* / *Switch game*; the session win-strip tallies the whole game night |
+| **Sign in** | Landing → 👤 → `/login` → Google, or phone + OTP (prototype: **any 6 digits work**) → lands on the dashboard |
+| **Dashboard** | `/dashboard` (signed-in home): stats (games/wins/nights), rejoin card, quick create/join, recent-game history — populated from games you actually finish in the prototype |
+
+## Pages
+
+| Route | Screen |
+|---|---|
+| `/` | Landing (create / join with code / festival banner / resume card) |
+| `/create` | Create Room (game picker + schema-driven options) |
+| `/r/:code` | The Room — join gate → lobby → game → results as **states** of one URL |
+| `/login` | Sign in (Google mock + phone → 6-cell OTP) |
+| `/dashboard` | Signed-in home: stats, quick actions, recent games |
+| `/me` | Profile (guest or signed-in, recent games, sign out) |
 
 ## How the prototype maps to the design system
 

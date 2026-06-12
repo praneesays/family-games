@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../lib/store';
 import { Button } from '../components/Button';
 import { CodeInput } from '../components/Input';
 
 export function Landing() {
   const nav = useNavigate();
+  const signedIn = useStore((s) => s.auth.signedIn);
   const [code, setCode] = useState('');
   const lastRoom = (() => {
     try {
@@ -20,7 +22,7 @@ export function Landing() {
     <div className="page landing">
       <header className="landing__top">
         <span className="brandmark">🎪 FamilyGames</span>
-        <button className="iconbtn" aria-label="Profile" onClick={() => nav('/me')}>
+        <button className="iconbtn" aria-label="Profile" onClick={() => nav(signedIn ? '/dashboard' : '/login')}>
           👤
         </button>
       </header>
