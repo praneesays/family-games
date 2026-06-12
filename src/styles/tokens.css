@@ -1,0 +1,148 @@
+/* ======================================================================
+   ANGAN DESIGN SYSTEM — design tokens (blueprint §11)
+   Primitives -> Semantic. Components consume ONLY semantic tokens.
+   Festival themes are token overlays via [data-theme]; contrast-locked.
+   ====================================================================== */
+
+:root {
+  /* ---- PRIMITIVES (never used directly by components) ---- */
+  --marigold-400: #f97316;
+  --marigold-500: #e8590c;
+  --marigold-600: #c2410c;
+  --marigold-700: #9a3412;
+  --peacock-500: #0d9488;
+  --peacock-600: #0f766e;
+  --peacock-700: #115e59;
+  --indigo-900: #1e1b4b;
+  --gold-300: #fcd34d;
+  --gold-400: #fbbf24;
+  --cream-50: #fdf8f0;
+  --cream-100: #faf0e1;
+  --ink-900: #292524;
+  --ink-600: #57534e;
+  --ink-400: #a8a29e;
+  --ink-200: #e7e5e4;
+  --white: #ffffff;
+  --green-700: #15803d;
+  --green-50: #ecfdf3;
+  --red-700: #b91c1c;
+  --red-50: #fef2f2;
+  --amber-500: #f59e0b;
+  --amber-700: #b45309;
+  --amber-50: #fffbeb;
+  --blue-700: #1d4ed8;
+
+  /* ---- SEMANTIC: actions ---- */
+  --color-action-primary: var(--marigold-600);
+  --color-action-primary-press: var(--marigold-700);
+  --color-action-primary-soft: #fde9da;
+  --color-action-secondary: var(--peacock-600);
+  --color-action-secondary-press: var(--peacock-700);
+  --color-action-danger: var(--red-700);
+
+  /* ---- SEMANTIC: surfaces ---- */
+  --color-bg-page: var(--cream-50);
+  --color-bg-surface: var(--white);
+  --color-bg-sunken: var(--cream-100);
+  --color-bg-scrim: rgba(41, 37, 36, 0.55);
+  --color-bg-invite: var(--indigo-900);
+
+  /* ---- SEMANTIC: text ---- */
+  --color-text-primary: var(--ink-900);
+  --color-text-secondary: var(--ink-600);
+  --color-text-muted: var(--ink-400);
+  --color-text-on-primary: var(--white);
+  --color-text-on-dark: var(--cream-50);
+
+  /* ---- SEMANTIC: borders / focus ---- */
+  --color-border-default: var(--ink-200);
+  --color-border-strong: var(--ink-400);
+  --color-focus-ring: var(--peacock-600);
+  --color-focus-ring-dark: var(--gold-400);
+
+  /* ---- SEMANTIC: feedback ---- */
+  --color-success: var(--green-700);
+  --color-success-soft: var(--green-50);
+  --color-error: var(--red-700);
+  --color-error-soft: var(--red-50);
+  --color-warning: var(--amber-700);
+  --color-warning-soft: var(--amber-50);
+
+  /* ---- SEMANTIC: game ---- */
+  --color-game-turn: var(--gold-400);
+  --color-game-marked: var(--marigold-600);
+  --color-game-celebrate: var(--gold-400);
+  --color-suit-red: var(--red-700);
+  --color-suit-black: var(--ink-900);
+
+  /* ---- TYPOGRAPHY ---- */
+  --font-body: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Baloo 2', var(--font-body);
+
+  --type-display-xl: 700 44px/1.1 var(--font-display);
+  --type-display: 700 30px/1.15 var(--font-display);
+  --type-heading: 700 24px/1.25 var(--font-body);
+  --type-title: 600 20px/1.3 var(--font-body);
+  --type-body: 400 18px/1.5 var(--font-body);
+  --type-body-strong: 600 18px/1.5 var(--font-body);
+  --type-body-sm: 400 16px/1.5 var(--font-body);
+  --type-caption: 500 14px/1.4 var(--font-body);
+
+  /* ---- SPACE (4-base) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --gutter: 16px;
+
+  /* ---- RADIUS ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  /* ---- ELEVATION (warm-tinted shadows) ---- */
+  --elev-1: 0 1px 2px rgba(41, 37, 36, 0.06), 0 2px 6px rgba(41, 37, 36, 0.08);
+  --elev-2: 0 2px 6px rgba(41, 37, 36, 0.08), 0 8px 20px rgba(41, 37, 36, 0.12);
+  --elev-3: 0 8px 24px rgba(41, 37, 36, 0.14), 0 18px 48px rgba(41, 37, 36, 0.18);
+
+  /* ---- TOUCH / SIZING ---- */
+  --touch-min: 48px;
+  --btn-xl: 64px;
+  --btn-l: 56px;
+  --btn-m: 44px;
+
+  /* ---- MOTION ---- */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 600ms;
+}
+
+/* ===================== FESTIVAL THEME: DIWALI =====================
+   Overlay swaps warm tints + celebration colors. Text/contrast tokens
+   stay locked so accessibility survives the skin. */
+[data-theme='diwali'] {
+  --color-bg-page: #fff6e9;
+  --color-bg-sunken: #fdebcf;
+  --color-action-primary: #b4480e;
+  --color-action-primary-press: #8a3409;
+  --color-bg-invite: #2a0a4a;
+  --color-game-celebrate: #ffd24a;
+}
+
+/* ===================== REDUCED MOTION ===================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
