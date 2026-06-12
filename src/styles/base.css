@@ -1,0 +1,130 @@
+/* ======================================================================
+   BASE — reset + typography + shared primitives
+   ====================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font: var(--type-body);
+  color: var(--color-text-primary);
+  background: var(--color-bg-page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--color-action-secondary);
+  text-decoration: none;
+}
+
+h1 { font: var(--type-display); }
+h2 { font: var(--type-heading); }
+h3 { font: var(--type-title); }
+
+/* Visible focus for keyboard users (never suppressed) */
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+[data-on-dark] :focus-visible {
+  outline-color: var(--color-focus-ring-dark);
+}
+
+/* Screen-reader-only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- App-level layout shells ---- */
+.app-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A phone-width centered page used by funnel screens */
+.page {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--gutter);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.page--wide { max-width: 640px; }
+
+.brandmark {
+  font: var(--type-title);
+  font-family: var(--font-display);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.muted { color: var(--color-text-secondary); }
+.center { text-align: center; }
+.stack > * + * { margin-top: var(--space-4); }
+.stack-sm > * + * { margin-top: var(--space-2); }
+.row { display: flex; align-items: center; gap: var(--space-3); }
+.spacer { flex: 1; }
+.fill { flex: 1; }
+.nowrap { white-space: nowrap; }
+
+/* divider with centered label: "── or join with a code ──" */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-secondary);
+  font: var(--type-body-sm);
+  margin: var(--space-4) 0;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-default);
+}
